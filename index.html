@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>鸟人很忙</title>
+  <style>
+    :root {
+      --accent: #5bc4c4;
+      --accent-soft: rgba(91, 196, 196, 0.35);
+      --nav-inactive: rgba(255, 255, 255, 0.92);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", sans-serif;
+      color: #1a1a1a;
+      background: #0d1412;
+    }
+
+    /* 顶部导航：固定悬浮 */
+    .site-nav {
+      position: fixed;
+      top: 0;
+      right: 0;
+      left: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 1rem 1.75rem;
+      background: linear-gradient(
+        180deg,
+        rgba(8, 18, 22, 0.55) 0%,
+        rgba(8, 18, 22, 0.18) 70%,
+        transparent 100%
+      );
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    .site-nav a {
+      position: relative;
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--nav-inactive);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      border-radius: 999px;
+      transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+    }
+
+    .site-nav a:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .site-nav a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* 选中：加粗 + 强调色 */
+    .site-nav a.is-active {
+      color: #fff;
+      font-weight: 700;
+      background: var(--accent-soft);
+      box-shadow: 0 0 0 1px rgba(91, 196, 196, 0.45), inset 0 0 20px rgba(91, 196, 196, 0.12);
+    }
+
+    /* 首屏英雄区 */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: clamp(5.5rem, 14vh, 9rem) 1.5rem 3rem;
+      text-align: center;
+      background: #1a2824 url("assets/hero-bg.png") center / cover no-repeat;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(10, 22, 28, 0.35) 0%,
+        rgba(10, 22, 28, 0.15) 45%,
+        rgba(10, 22, 28, 0.5) 100%
+      );
+      pointer-events: none;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 42rem;
+    }
+
+    .hero-logo {
+      width: clamp(88px, 18vw, 120px);
+      height: clamp(88px, 18vw, 120px);
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 1.25rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(255, 255, 255, 0.2);
+    }
+
+    .hero-title {
+      margin: 0 0 0.85rem;
+      font-size: clamp(2rem, 5.5vw, 3rem);
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.08em;
+      line-height: 1.2;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 0 1px rgba(0, 0, 0, 0.9);
+    }
+
+    .hero-slogan {
+      margin: 0;
+      font-size: clamp(0.95rem, 2.4vw, 1.2rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.65;
+      letter-spacing: 0.04em;
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5), 0 0 1px rgba(0, 0, 0, 0.85);
+    }
+
+    /* 下方内容区（预留模块） */
+    .module {
+      scroll-margin-top: 4.5rem;
+      padding: 4rem 1.5rem 5rem;
+      max-width: 52rem;
+      margin: 0 auto;
+    }
+
+    .module:nth-of-type(odd) {
+      background: #f4f7f6;
+    }
+
+    .module:nth-of-type(even) {
+      background: #eef3f2;
+    }
+
+    .module h2 {
+      margin: 0 0 1rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1c3a36;
+      border-left: 4px solid var(--accent);
+      padding-left: 0.75rem;
+    }
+
+    .module p {
+      margin: 0;
+      line-height: 1.8;
+      color: #3d4f4c;
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.75);
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
+      animation: float 2.2s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        opacity: 0.65;
+        transform: translateX(-50%) translateY(0);
+      }
+      50% {
+        opacity: 1;
+        transform: translateX(-50%) translateY(4px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="site-nav" aria-label="主导航">
+    <a href="#video" data-section="video">视频</a>
+    <a href="#notes" data-section="notes">观鸟笔记</a>
+    <a href="#wetland" data-section="wetland">五常湿地</a>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <img class="hero-logo" src="assets/logo.png" alt="鸟人很忙 Logo" width="120" height="120" />
+      <h1 class="hero-title">鸟人很忙</h1>
+      <p class="hero-slogan">借由观鸟，抵达生活的日常与远方</p>
+    </div>
+    <p class="scroll-hint" aria-hidden="true">向下滚动 · 三个模块</p>
+  </header>
+
+  <main>
+    <section id="video" class="module" aria-labelledby="video-heading">
+      <h2 id="video-heading">视频</h2>
+      <p>观鸟 Vlog 将陆续更新在此，欢迎常来看看。</p>
+    </section>
+    <section id="notes" class="module" aria-labelledby="notes-heading">
+      <h2 id="notes-heading">观鸟笔记</h2>
+      <p>记录每一次遇见：物种、生境与当下的心情。</p>
+    </section>
+    <section id="wetland" class="module" aria-labelledby="wetland-heading">
+      <h2 id="wetland-heading">五常湿地</h2>
+      <p>我的观鸟自留地，分享这片湿地四季与鸟讯。</p>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var links = document.querySelectorAll(".site-nav a[data-section]");
+      var ids = ["video", "notes", "wetland"];
+
+      function setActive(id) {
+        links.forEach(function (a) {
+          a.classList.toggle("is-active", a.getAttribute("data-section") === id);
+        });
+      }
+
+      links.forEach(function (a) {
+        a.addEventListener("click", function () {
+          setActive(a.getAttribute("data-section"));
+        });
+      });
+
+      var sections = ids
+        .map(function (id) {
+          return document.getElementById(id);
+        })
+        .filter(Boolean);
+
+      if (!sections.length || !("IntersectionObserver" in window)) {
+        setActive("video");
+        return;
+      }
+
+      var observer = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              setActive(entry.target.id);
+            }
+          });
+        },
+        { root: null, rootMargin: "-40% 0px -45% 0px", threshold: 0 }
+      );
+
+      sections.forEach(function (sec) {
+        observer.observe(sec);
+      });
+
+      function syncFromScroll() {
+        if (window.scrollY < window.innerHeight * 0.55) {
+          links.forEach(function (a) {
+            a.classList.remove("is-active");
+          });
+        }
+      }
+      window.addEventListener("scroll", syncFromScroll, { passive: true });
+      syncFromScroll();
+    })();
+  </script>
+</body>
+</html>
