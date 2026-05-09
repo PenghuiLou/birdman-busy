@@ -3,288 +3,248 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>鸟人很忙</title>
+  <title>鸟人很忙 - 观鸟笔记</title>
   <style>
     :root {
       --accent: #5bc4c4;
       --accent-soft: rgba(91, 196, 196, 0.35);
       --nav-inactive: rgba(255, 255, 255, 0.92);
+      --text-main: #1a1a1a;
+      --text-muted: #5d6d6a;
+      --bg-card: #ffffff;
     }
 
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
-      font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Hiragino Sans GB", sans-serif;
-      color: #1a1a1a;
+      font-family: "Microsoft YaHei", "微软雅黑", sans-serif;
+      color: var(--text-main);
       background: #0d1412;
+      line-height: 1.6;
     }
 
-    /* 顶部导航：固定悬浮 */
+    /* 导航栏 */
     .site-nav {
       position: fixed;
-      top: 0;
-      right: 0;
-      left: 0;
+      top: 0; right: 0; left: 0;
       z-index: 1000;
       display: flex;
       justify-content: flex-end;
-      align-items: center;
-      gap: 0.25rem;
       padding: 1rem 1.75rem;
-      background: linear-gradient(
-        180deg,
-        rgba(8, 18, 22, 0.55) 0%,
-        rgba(8, 18, 22, 0.18) 70%,
-        transparent 100%
-      );
+      background: linear-gradient(180deg, rgba(8, 18, 22, 0.7) 0%, transparent 100%);
       backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
     }
 
     .site-nav a {
-      position: relative;
       padding: 0.5rem 1rem;
       font-size: 0.95rem;
-      font-weight: 500;
       color: var(--nav-inactive);
       text-decoration: none;
-      letter-spacing: 0.02em;
       border-radius: 999px;
-      transition: color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.45);
+      transition: all 0.3s ease;
     }
 
-    .site-nav a:hover {
+    .site-nav a:hover, .site-nav a.is-active {
       color: #fff;
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .site-nav a:focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 2px;
-    }
-
-    /* 选中：加粗 + 强调色 */
-    .site-nav a.is-active {
-      color: #fff;
-      font-weight: 700;
       background: var(--accent-soft);
-      box-shadow: 0 0 0 1px rgba(91, 196, 196, 0.45), inset 0 0 20px rgba(91, 196, 196, 0.12);
     }
 
-    /* 首屏英雄区 */
+    /* Hero 区 */
     .hero {
       position: relative;
-      min-height: 100vh;
+      min-height: 80vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      padding: clamp(5.5rem, 14vh, 9rem) 1.5rem 3rem;
+      justify-content: center;
       text-align: center;
       background: #1a2824 url("assets/hero-bg.png") center / cover no-repeat;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        180deg,
-        rgba(10, 22, 28, 0.35) 0%,
-        rgba(10, 22, 28, 0.15) 45%,
-        rgba(10, 22, 28, 0.5) 100%
-      );
-      pointer-events: none;
-    }
-
-    .hero-inner {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 42rem;
-    }
-
-    .hero-logo {
-      width: clamp(88px, 18vw, 120px);
-      height: clamp(88px, 18vw, 120px);
-      object-fit: cover;
-      border-radius: 50%;
-      margin-bottom: 1.25rem;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), 0 0 0 3px rgba(255, 255, 255, 0.2);
-    }
-
-    .hero-title {
-      margin: 0 0 0.85rem;
-      font-size: clamp(2rem, 5.5vw, 3rem);
-      font-weight: 700;
       color: #fff;
-      letter-spacing: 0.08em;
-      line-height: 1.2;
-      text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55), 0 0 1px rgba(0, 0, 0, 0.9);
     }
 
-    .hero-slogan {
-      margin: 0;
-      font-size: clamp(0.95rem, 2.4vw, 1.2rem);
-      font-weight: 400;
-      color: #fff;
-      line-height: 1.65;
-      letter-spacing: 0.04em;
-      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5), 0 0 1px rgba(0, 0, 0, 0.85);
-    }
+    .hero-title { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 0.5rem; letter-spacing: 0.1em; }
+    .hero-slogan { font-size: 1.2rem; opacity: 0.9; }
 
-    /* 下方内容区（预留模块） */
+    /* 内容模块通用样式 */
     .module {
-      scroll-margin-top: 4.5rem;
-      padding: 4rem 1.5rem 5rem;
-      max-width: 52rem;
+      max-width: 900px;
       margin: 0 auto;
+      padding: 5rem 1.5rem;
     }
 
-    .module:nth-of-type(odd) {
-      background: #f4f7f6;
-    }
+    section:nth-of-type(odd) { background: #f9fbfb; }
+    section:nth-of-type(even) { background: #f2f6f5; }
 
-    .module:nth-of-type(even) {
-      background: #eef3f2;
-    }
-
-    .module h2 {
-      margin: 0 0 1rem;
-      font-size: 1.5rem;
-      font-weight: 700;
+    h2.section-title {
+      font-size: 1.8rem;
       color: #1c3a36;
-      border-left: 4px solid var(--accent);
-      padding-left: 0.75rem;
+      border-left: 5px solid var(--accent);
+      padding-left: 1rem;
+      margin-bottom: 3rem;
     }
 
-    .module p {
-      margin: 0;
-      line-height: 1.8;
+    /* 笔记卡片样式 */
+    .note-card {
+      background: var(--bg-card);
+      border-radius: 12px;
+      padding: 2.5rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .note-card:hover { transform: translateY(-5px); }
+
+    .note-date {
+      font-family: monospace;
+      color: var(--accent);
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .note-card h3 {
+      margin-top: 0;
+      font-size: 1.4rem;
+      color: #2c4a46;
+    }
+
+    .note-content p {
       color: #3d4f4c;
+      font-size: 1.05rem;
+      margin-bottom: 1.2rem;
+      text-align: justify;
     }
 
-    .scroll-hint {
-      position: absolute;
-      bottom: 1.5rem;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 1;
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.75);
-      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.5);
-      animation: float 2.2s ease-in-out infinite;
+    .source-link {
+      display: inline-block;
+      margin-top: 1rem;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-bottom: 1px dashed var(--accent);
     }
 
-    @keyframes float {
-      0%,
-      100% {
-        opacity: 0.65;
-        transform: translateX(-50%) translateY(0);
-      }
-      50% {
-        opacity: 1;
-        transform: translateX(-50%) translateY(4px);
-      }
+    .source-link:hover { opacity: 0.8; }
+
+    /* 响应式调整 */
+    @media (max-width: 600px) {
+      .note-card { padding: 1.5rem; }
     }
   </style>
 </head>
 <body>
-  <nav class="site-nav" aria-label="主导航">
-    <a href="#video" data-section="video">视频</a>
-    <a href="#notes" data-section="notes">观鸟笔记</a>
-    <a href="#wetland" data-section="wetland">五常湿地</a>
+
+  <nav class="site-nav">
+    <a href="#video">视频</a>
+    <a href="#notes" class="is-active">观鸟笔记</a>
+    <a href="#wetland">五常湿地</a>
   </nav>
 
   <header class="hero">
-    <div class="hero-inner">
-      <img class="hero-logo" src="assets/logo.png" alt="鸟人很忙 Logo" width="120" height="120" />
-      <h1 class="hero-title">鸟人很忙</h1>
-      <p class="hero-slogan">借由观鸟，抵达生活的日常与远方</p>
-    </div>
-    <p class="scroll-hint" aria-hidden="true">向下滚动 · 三个模块</p>
+    <h1 class="hero-title">鸟人很忙</h1>
+    <p class="hero-slogan">借由观鸟，抵达生活的日常与远方</p>
   </header>
 
   <main>
-    <section id="video" class="module" aria-labelledby="video-heading">
-      <h2 id="video-heading">视频</h2>
-      <p>观鸟 Vlog 将陆续更新在此，欢迎常来看看。</p>
+    <section id="video" class="module">
+      <h2 class="section-title">视频</h2>
+      <p style="text-align: center; color: #889996;">观鸟 Vlog 正在剪辑中，敬请期待...</p>
     </section>
-    <section id="notes" class="module" aria-labelledby="notes-heading">
-      <h2 id="notes-heading">观鸟笔记</h2>
-      <p>记录每一次遇见：物种、生境与当下的心情。</p>
+
+    <!-- 观鸟笔记模块 -->
+    <section id="notes" class="module">
+      <h2 class="section-title">近期笔记</h2>
+      
+      <div id="notes-container">
+        <!-- 笔记将通过 JS 或手动填入 -->
+      </div>
     </section>
-    <section id="wetland" class="module" aria-labelledby="wetland-heading">
-      <h2 id="wetland-heading">五常湿地</h2>
-      <p>我的观鸟自留地，分享这片湿地四季与鸟讯。</p>
+
+    <section id="wetland" class="module">
+      <h2 class="section-title">五常湿地</h2>
+      <p>五常湿地是我的“自留地”。这里的一草一木，每一季的迁徙，都记录着自然的律动。</p>
     </section>
   </main>
 
   <script>
-    (function () {
-      var links = document.querySelectorAll(".site-nav a[data-section]");
-      var ids = ["video", "notes", "wetland"];
-
-      function setActive(id) {
-        links.forEach(function (a) {
-          a.classList.toggle("is-active", a.getAttribute("data-section") === id);
-        });
+    // 你的笔记数据
+    const notesData = [
+      {
+        "date": "2026-04-02",
+        "title": "五常湿地观鸟笔记 2026.4.2",
+        "paragraphs": [
+          "进入湿地没走多远，在油菜花田里看到一只东亚石䳭雄鸟，白色翼斑明显。之后没多久又看到一只。西边的空地上空，一只喜鹊与两只灰头麦鸡在空中打斗。",
+          "新的芦苇开始生长出来，高度已超过膝盖。听到一只蓝喉歌鸲有些粗哑的鸣叫，与上上周在良渚遗址公园听到的叫声一样。后又在一个水塘边翻耕后的一小片菜地中看到，会飞到水草上觅食，与水塘对岸的另一只互相鸣唱。",
+          "不远处一只灰背鸫雄鸟攀在枯萎的灌丛枝上，背部蓝色与胸胁部的橙色好像更鲜艳了一些。",
+          "终于在该地看到了虎斑地鸫，不少于两只。发出尖细的叫声。在自留地看到的第182种鸟。",
+          "原文：https://penghui.substack.com/p/202642"
+        ]
+      },
+      {
+        "date": "2026-03-30",
+        "title": "重新认识一种叫珠颈斑鸠的鸟",
+        "paragraphs": [
+          "在路牌背面发现了一只正在孵卵的珠颈斑鸠。这种印象里有些散漫随意的鸟类，在孵卵的这段时间，仿佛化身为了一块铅、一座小雕像。神情之坚定，仿佛什么也阻挠不了它成功育雏的决心。",
+          "但无论如何，两只小斑鸠就这样出生了！它们像是一份礼物，走进我循规蹈矩的工作日，让每天多了一份小小的期待。",
+          "我似乎早就预感到了这一天，鸟类育雏从来都不是一件容易的事，离去也从来都是突然的。",
+          "原文：https://penghui.substack.com/p/94e"
+        ]
+      },
+      {
+        "date": "2025-09-22",
+        "title": "地藏王之夜",
+        "paragraphs": [
+          "终于在这个秋天，在这里，等来了第一只鹟。透过望远镜，可看到这只灰色鹟胸前有着清晰的深色纵纹，以及长长的初级飞羽。",
+          "那一刻，我感觉自己像一艘木板已被全部替换的忒修斯之船，正驶向一个尚未有人到达的地方。",
+          "原文：https://penghui.substack.com/p/ad2"
+        ]
       }
+      // ... 更多数据可以按此格式添加
+    ];
 
-      links.forEach(function (a) {
-        a.addEventListener("click", function () {
-          setActive(a.getAttribute("data-section"));
-        });
+    // 渲染笔记的函数
+    function renderNotes() {
+      const container = document.getElementById('notes-container');
+      
+      notesData.forEach(note => {
+        const card = document.createElement('article');
+        card.className = 'note-card';
+        
+        // 过滤出普通段落和原文链接
+        const contentPs = note.paragraphs.filter(p => !p.startsWith('原文：'));
+        const sourceP = note.paragraphs.find(p => p.startsWith('原文：'));
+        const sourceUrl = sourceP ? sourceP.replace('原文：', '').trim() : '#';
+
+        card.innerHTML = `
+          <span class="note-date">${note.date}</span>
+          <h3>${note.title}</h3>
+          <div class="note-content">
+            ${contentPs.map(p => `<p>${p}</p>`).join('')}
+          </div>
+          ${sourceP ? `<a href="${sourceUrl}" target="_blank" class="source-link">阅读全文 ↗</a>` : ''}
+        `;
+        container.appendChild(card);
       });
+    }
 
-      var sections = ids
-        .map(function (id) {
-          return document.getElementById(id);
-        })
-        .filter(Boolean);
+    // 初始化
+    document.addEventListener('DOMContentLoaded', renderNotes);
 
-      if (!sections.length || !("IntersectionObserver" in window)) {
-        setActive("video");
-        return;
-      }
-
-      var observer = new IntersectionObserver(
-        function (entries) {
-          entries.forEach(function (entry) {
-            if (entry.isIntersecting) {
-              setActive(entry.target.id);
-            }
-          });
-        },
-        { root: null, rootMargin: "-40% 0px -45% 0px", threshold: 0 }
-      );
-
-      sections.forEach(function (sec) {
-        observer.observe(sec);
-      });
-
-      function syncFromScroll() {
-        if (window.scrollY < window.innerHeight * 0.55) {
-          links.forEach(function (a) {
-            a.classList.remove("is-active");
+    // 导航高亮逻辑 (保留你原有的 IntersectionObserver 逻辑并适配)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.site-nav a').forEach(a => {
+            a.classList.toggle('is-active', a.getAttribute('href') === '#' + entry.target.id);
           });
         }
-      }
-      window.addEventListener("scroll", syncFromScroll, { passive: true });
-      syncFromScroll();
-    })();
+      });
+    }, { threshold: 0.2 });
+
+    document.querySelectorAll('section').forEach(section => observer.observe(section));
   </script>
 </body>
 </html>
